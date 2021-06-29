@@ -5,9 +5,13 @@
 package it.polito.tdp.artsmia;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.artsmia.model.ArtObject;
 import it.polito.tdp.artsmia.model.Model;
+import it.polito.tdp.artsmia.model.Percorso;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -25,7 +29,7 @@ public class ArtsmiaController {
 	private URL location;
 
 	@FXML // fx:id="boxLUN"
-	private ChoiceBox<?> boxLUN; // Value injected by FXMLLoader
+	private ChoiceBox<Integer> boxLUN; // Value injected by FXMLLoader
 
 	@FXML // fx:id="btnCalcolaComponenteConnessa"
 	private Button btnCalcolaComponenteConnessa; // Value injected by FXMLLoader
@@ -57,13 +61,24 @@ public class ArtsmiaController {
 		this.txtResult.setText("Calcolo in corso");
 		System.out.println("doCalcolaComponenteConnessa");
 		int id = Integer.valueOf(this.txtObjectId.getText()); 
+		double lun = model.trovaNumVicini(id);
 		String result = model.ritornaVicini(id);
 		this.txtResult.setText(result);
+		//Creo valori associati all'oggetto
+		List<Integer> listaInt = new ArrayList<Integer>();
+		for(int i=2; i<lun; i++) {
+			listaInt.add(i);
+		}
+		this.boxLUN.getItems().setAll(listaInt);
 	}
 
 	@FXML
 	void doCercaOggetti(ActionEvent event) {
 		txtResult.setText("doCercaOggetti");
+		int valScelto = this.boxLUN.getValue();
+		Integer aoId = Integer.valueOf(this.txtObjectId.getText());
+		String result = model.risultatoRicorsione(aoId, valScelto);
+		this.txtResult.setText(result);
 	}
 
 	@FXML // This method is called by the FXMLLoader when initialization is complete
